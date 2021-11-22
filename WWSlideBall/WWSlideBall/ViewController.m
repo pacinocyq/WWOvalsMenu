@@ -55,10 +55,10 @@
     
     
     
-    _contentView.frame = CGRectMake(0, 200, self.view.frame.size.width, self.view.frame.size.height-400);
+    _contentView.frame = CGRectMake(0, 100, self.view.frame.size.width, self.view.frame.size.height-200);
     
     _frame1 = CGRectMake(_contentView.frame.size.width - 100, 0, 100, 100);
-    _frame2 = CGRectMake(0, (_contentView.frame.size.width/2.0)-50, 100, 100);
+    _frame2 = CGRectMake(0, (_contentView.frame.size.height/2.0)-50, 100, 100);
     _frame3 = CGRectMake(_contentView.frame.size.width - 100, _contentView.frame.size.height-100, 100, 100);
     _frame4 = CGRectMake((_contentView.frame.size.width - 100)*2, (_contentView.frame.size.width/2.0)-50, 100, 100);
     
@@ -97,29 +97,29 @@
     CGRect newFrame2 = [_frameArray[1] CGRectValue];
     CGRect newFrame3 = [_frameArray[2] CGRectValue];
     CGRect newFrame4 = [_frameArray[3] CGRectValue];
+
     for (int i = 0; i < _frameArray.count; i++) {
         CGRect frame = [_frameArray[i] CGRectValue];
         if (frame.origin.x == _imageView1.frame.origin.x && frame.origin.y == _imageView1.frame.origin.y ) {
-            NSInteger index = i == 3 ? 0 : i++;
+            NSInteger index = i == 3 ? 0 : i+1;
             newFrame1 = [_frameArray[index] CGRectValue];
             NSLog(@"FrameTag = %ld",index); 
         }
         if (frame.origin.x == _imageView2.frame.origin.x && frame.origin.y == _imageView2.frame.origin.y ) {
-            NSInteger index = i == 3 ? 0 : i++;
+            NSInteger index = i == 3 ? 0 : i+1;
             newFrame2 = [_frameArray[index] CGRectValue];
             NSLog(@"FrameTag = %ld",index);
         }
         if (frame.origin.x == _imageView3.frame.origin.x && frame.origin.y == _imageView3.frame.origin.y ) {
-            NSInteger index = i == 3 ? 0 : i++;
+            NSInteger index = i == 3 ? 0 : i+1;
             newFrame3 = [_frameArray[index] CGRectValue];
             NSLog(@"FrameTag = %ld",index);
         }
         if (frame.origin.x == _imageView4.frame.origin.x && frame.origin.y == _imageView4.frame.origin.y ) {
-            NSInteger index = i == 3 ? 0 : i++;
+            NSInteger index = i == 3 ? 0 : i+1;
             newFrame4 = [_frameArray[index] CGRectValue];
             NSLog(@"FrameTag = %ld",index);
         }
-        
     }
     _imageView1.frame = newFrame1;
     _imageView2.frame = newFrame2;
@@ -138,8 +138,16 @@
     // 返回的是相对于最原始的手指的偏移量
     CGPoint transP = [pan translationInView:self.view];
     NSLog(@"translationInView == %f----%f",transP.x,transP.y);
-    if (pan.state == UIGestureRecognizerStateEnded) {
+    
+    if (pan.state == UIGestureRecognizerStateChanged) {
         
+        
+        
+        
+    }
+    
+    
+    if (pan.state == UIGestureRecognizerStateEnded) {
         
         [_imageView1.layer addAnimation:[self createBasicAnimationWithFromValue:_imageView1.center toValue:_imageView2.center] forKey:@"animation1"];
         [_imageView2.layer addAnimation:[self createBasicAnimationWithFromValue:_imageView2.center toValue:_imageView3.center] forKey:@"animation2"];
