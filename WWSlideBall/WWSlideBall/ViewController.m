@@ -123,11 +123,8 @@
     NSLog(@"translationInView == %f----%f",transP.x,transP.y);
     
     if (pan.state == UIGestureRecognizerStateChanged) {
-        
         [self layoutItems:transP isPageEnable:NO];
-        
     }
-    
     
     if (pan.state == UIGestureRecognizerStateEnded) {
         [self layoutItems:transP isPageEnable:YES];
@@ -161,11 +158,17 @@
         CGRect frame2 = [_frameArray[1] CGRectValue];
         CGRect frame3 = [_frameArray[2] CGRectValue];
         CGRect frame4 = [_frameArray[3] CGRectValue];
-
-        if ((ivX <= frame1.origin.x  && ivX > frame2.origin.x) && (ivY >= frame1.origin.y  && ivY < frame2.origin.y)) {
+        
+        BOOL isDownPull = translationY > 0;
+        
+        
+        BOOL downResult1 = (ivX <= frame1.origin.x  && ivX > frame2.origin.x) && (ivY >= frame1.origin.y  && ivY < frame2.origin.y);
+        BOOL upResult1 = (ivX < frame1.origin.x  && ivX >= frame2.origin.x) && (ivY > frame1.origin.y  && ivY <= frame2.origin.y);
+        BOOL result1 = isDownPull ? downResult1 : upResult1;
+        if (result1) {
             CGRect tempFrame = imageView.frame;
-            tempFrame.origin.x = translationY > 0 ? (frame1.origin.x - moveX) : (frame1.origin.x + moveX);
-            tempFrame.origin.y = frame1.origin.y + moveY;
+            tempFrame.origin.x = isDownPull ? (frame1.origin.x - moveX) : (frame2.origin.x + moveX);
+            tempFrame.origin.y = isDownPull ? (frame1.origin.y + moveY) : (frame2.origin.y + moveY);
             
             if (tempFrame.origin.x < frame2.origin.x) {
                 tempFrame.origin.x = frame2.origin.x;
@@ -175,20 +178,19 @@
             }
             
             if (isPageEnable) {
-                tempFrame = translationY > 0 ? frame2 : frame1;
-                [UIView animateWithDuration:0.1 animations:^{
-                    imageView.frame = tempFrame;
-                }];
-                
-            } else {
-                imageView.frame = tempFrame;
+                tempFrame = isDownPull ? frame2 : frame1;
             }
+            [self updateFrame:tempFrame view:imageView isPageEnable:isPageEnable];
+            NSLog(@"WW>>>> 111  %ld",(long)imageView.tag);
         }
         
-        if ((ivX >= frame2.origin.x  && ivX < frame3.origin.x) && (ivY >= frame2.origin.y  && ivY < frame3.origin.y)) {
+        BOOL downResult2 = (ivX >= frame2.origin.x  && ivX < frame3.origin.x) && (ivY >= frame2.origin.y  && ivY < frame3.origin.y);
+        BOOL upResult2 = (ivX > frame2.origin.x  && ivX <= frame3.origin.x) && (ivY > frame2.origin.y  && ivY <= frame3.origin.y);
+        BOOL result2 = translationY > 0 ? downResult2 : upResult2;
+        if (result2) {
             CGRect tempFrame = imageView.frame;
-            tempFrame.origin.x = frame2.origin.x + moveX;
-            tempFrame.origin.y = translationY > 0 ? (frame2.origin.y + moveY) : (frame2.origin.y - moveY);
+            tempFrame.origin.x = isDownPull ? (frame2.origin.x + moveX) : (frame3.origin.x - moveX);
+            tempFrame.origin.y = isDownPull ? (frame2.origin.y + moveY) : (frame3.origin.y - moveY);
             
             if (tempFrame.origin.x > frame3.origin.x) {
                 tempFrame.origin.x = frame3.origin.x;
@@ -198,21 +200,20 @@
             }
             
             if (isPageEnable) {
-                tempFrame = translationY > 0 ? frame3 : frame2;
-                [UIView animateWithDuration:0.1 animations:^{
-                    imageView.frame = tempFrame;
-                }];
-                
-            } else {
-                imageView.frame = tempFrame;
+                tempFrame = isDownPull ? frame3 : frame2;
             }
             
+            [self updateFrame:tempFrame view:imageView isPageEnable:isPageEnable];
+            NSLog(@"WW>>>> 222  %ld",(long)imageView.tag);
         }
         
-        if ((ivX >= frame3.origin.x  && ivX < frame4.origin.x) && (ivY <= frame3.origin.y  && ivY > frame4.origin.y)) {
+        BOOL downResult3 = (ivX >= frame3.origin.x  && ivX < frame4.origin.x) && (ivY <= frame3.origin.y  && ivY > frame4.origin.y);
+        BOOL upResult3 = (ivX > frame3.origin.x  && ivX <= frame4.origin.x) && (ivY < frame3.origin.y  && ivY >= frame4.origin.y);
+        BOOL result3 = isDownPull ? downResult3 : upResult3;
+        if (result3) {
             CGRect tempFrame = imageView.frame;
-            tempFrame.origin.x = translationY > 0 ? (frame3.origin.x + moveX) : (frame3.origin.x - moveX);
-            tempFrame.origin.y = frame3.origin.y - moveY;
+            tempFrame.origin.x = isDownPull ? (frame3.origin.x + moveX) : (frame4.origin.x - moveX);
+            tempFrame.origin.y = isDownPull ? (frame3.origin.y - moveY) : (frame4.origin.y + moveY);
             
             if (tempFrame.origin.x > frame4.origin.x ) {
                 tempFrame.origin.x = frame4.origin.x;
@@ -222,20 +223,21 @@
             }
             
             if (isPageEnable) {
-                tempFrame = translationY > 0 ? frame4 : frame3;
-                [UIView animateWithDuration:0.28 animations:^{
-                    imageView.frame = tempFrame;
-                }];
-                
-            } else {
-                imageView.frame = tempFrame;
+                tempFrame = isDownPull ? frame4 : frame3;
             }
+            
+            [self updateFrame:tempFrame view:imageView isPageEnable:isPageEnable];
+            NSLog(@"WW>>>> 333  %ld",(long)imageView.tag);
         }
         
-        if ((ivX <= frame4.origin.x  && ivX > frame1.origin.x) && (ivY <= frame4.origin.y  && ivY > frame1.origin.y)) {
+        
+        BOOL downResult4 = (ivX <= frame4.origin.x  && ivX > frame1.origin.x) && (ivY <= frame4.origin.y  && ivY > frame1.origin.y);
+        BOOL upResult4 = (ivX < frame4.origin.x  && ivX >= frame1.origin.x) && (ivY < frame4.origin.y  && ivY >= frame1.origin.y);
+        BOOL result4 = translationY > 0 ? downResult4 : upResult4;
+        if (result4) {
             CGRect tempFrame = imageView.frame;
-            tempFrame.origin.x = frame4.origin.x - moveX;
-            tempFrame.origin.y = translationY > 0 ?  (frame4.origin.y - moveY) : (frame4.origin.y + moveY);
+            tempFrame.origin.x = isDownPull ? (frame4.origin.x - moveX) : (frame1.origin.x + moveX);
+            tempFrame.origin.y = isDownPull ? (frame4.origin.y - moveY) : (frame1.origin.y + moveY);
             
             if (tempFrame.origin.x < frame1.origin.x ) {
                 tempFrame.origin.x = frame1.origin.x;
@@ -245,83 +247,92 @@
             }
             
             if (isPageEnable) {
-                tempFrame = translationY > 0 ? frame1 : frame1;
-                [UIView animateWithDuration:0.1 animations:^{
-                    imageView.frame = tempFrame;
-                }];
-                
-            } else {
-                imageView.frame = tempFrame;
+                tempFrame = isDownPull ? frame1 : frame4;
             }
+            
+            [self updateFrame:tempFrame view:imageView isPageEnable:isPageEnable];
+            NSLog(@"WW>>>> 444  %ld",(long)imageView.tag);
         }
     }
 }
 
 
+- (void)updateFrame:(CGRect)frame view:(UIView*)view isPageEnable:(BOOL)isPageEnable {
+     
+    
+    if (isPageEnable) {
+        [UIView animateWithDuration:0.1 animations:^{
+            view.frame = frame;
+        }];
+    } else {
+        view.frame = frame;
+    }
+}
+
 
 //创建动画
-- (CABasicAnimation *)createBasicAnimationWithFromValue:(CGPoint)fromValue toValue:(CGPoint)toValue{
-    //创建动画对象
-    CABasicAnimation *basicAni = [CABasicAnimation animation];
-
-    //设置动画属性
-    basicAni.keyPath = @"position";
-
-    //设置动画的起始位置。也就是动画从哪里到哪里
-    basicAni.fromValue = [NSValue valueWithCGPoint:fromValue];
-
-    //动画结束后，layer所在的位置
-    basicAni.toValue = [NSValue valueWithCGPoint:toValue];
-
-    //动画持续时间
-    basicAni.duration = 0.28;
-
-    //动画重复次数
-    basicAni.repeatCount = 1;
-
-    //xcode8.0之后需要遵守代理协议
-    basicAni.delegate = self;
-    
-    //动画填充模式
-    basicAni.fillMode = kCAFillModeForwards;
-    basicAni.removedOnCompletion = NO;
-
-    basicAni.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-
-    return basicAni;
-}
-
-- (CGPoint)center:(CGRect)frame{
-    return CGPointMake(frame.origin.x + (frame.size.width/2.0), frame.origin.y + (frame.size.height/2.0));
-}
-
-
-//动画开始的时候调用
-- (void)animationDidStart:(CAAnimation *)anim{
+//- (CABasicAnimation *)createBasicAnimationWithFromValue:(CGPoint)fromValue toValue:(CGPoint)toValue{
+//    //创建动画对象
+//    CABasicAnimation *basicAni = [CABasicAnimation animation];
+//
+//    //设置动画属性
+//    basicAni.keyPath = @"position";
+//
+//    //设置动画的起始位置。也就是动画从哪里到哪里
+//    basicAni.fromValue = [NSValue valueWithCGPoint:fromValue];
+//
+//    //动画结束后，layer所在的位置
+//    basicAni.toValue = [NSValue valueWithCGPoint:toValue];
+//
+//    //动画持续时间
+//    basicAni.duration = 0.28;
+//
+//    //动画重复次数
+//    basicAni.repeatCount = 1;
+//
+//    //xcode8.0之后需要遵守代理协议
+//    basicAni.delegate = self;
+//
+//    //动画填充模式
+//    basicAni.fillMode = kCAFillModeForwards;
+//    basicAni.removedOnCompletion = NO;
+//
+//    basicAni.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//
+//    return basicAni;
+//}
+//
+//- (CGPoint)center:(CGRect)frame{
+//    return CGPointMake(frame.origin.x + (frame.size.width/2.0), frame.origin.y + (frame.size.height/2.0));
+//}
 
 
-}
-
-//动画结束的时候调用
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    
-    
-}
-
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    
-}
-
--(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    
-    
-    
-}
+////动画开始的时候调用
+//- (void)animationDidStart:(CAAnimation *)anim{
+//
+//
+//}
+//
+////动画结束的时候调用
+//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+//
+//
+//}
+//
+//
+//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//
+//}
+//
+//- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//
+//}
+//
+//-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//
+//
+//
+//}
 
 
 @end
