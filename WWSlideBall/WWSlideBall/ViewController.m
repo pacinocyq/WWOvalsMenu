@@ -57,9 +57,7 @@
         iv.frame = [_frameArray[i] CGRectValue];
         [iv addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)]];
         [_itemArray addObject:iv];
-        [_contentView addSubview:iv];
-
-        
+        [_contentView addSubview:iv]; 
     }
     
     UIPanGestureRecognizer *ges = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
@@ -177,6 +175,14 @@
                 tempFrame.origin.y = frame2.origin.y;
             }
             
+            if (tempFrame.origin.x > frame1.origin.x) {
+                tempFrame.origin.x = frame1.origin.x;
+            }
+            if (tempFrame.origin.y < frame1.origin.y) {
+                tempFrame.origin.y = frame1.origin.y;
+            }
+
+    
             if (isPageEnable) {
                 tempFrame = isDownPull ? frame2 : frame1;
             }
@@ -197,6 +203,12 @@
             }
             if (tempFrame.origin.y > frame3.origin.y) {
                 tempFrame.origin.y = frame3.origin.y;
+            }
+            if (tempFrame.origin.x < frame2.origin.x) {
+                tempFrame.origin.x = frame2.origin.x;
+            }
+            if (tempFrame.origin.y < frame2.origin.y) {
+                tempFrame.origin.y = frame2.origin.y;
             }
             
             if (isPageEnable) {
@@ -221,7 +233,13 @@
             if (tempFrame.origin.y < frame4.origin.y) {
                 tempFrame.origin.y = frame4.origin.y;
             }
-            
+            if (tempFrame.origin.x < frame3.origin.x ) {
+                tempFrame.origin.x = frame3.origin.x;
+            }
+            if (tempFrame.origin.y > frame3.origin.y) {
+                tempFrame.origin.y = frame3.origin.y;
+            }
+
             if (isPageEnable) {
                 tempFrame = isDownPull ? frame4 : frame3;
             }
@@ -238,13 +256,21 @@
             CGRect tempFrame = imageView.frame;
             tempFrame.origin.x = isDownPull ? (frame4.origin.x - moveX) : (frame1.origin.x + moveX);
             tempFrame.origin.y = isDownPull ? (frame4.origin.y - moveY) : (frame1.origin.y + moveY);
-            
+
             if (tempFrame.origin.x < frame1.origin.x ) {
                 tempFrame.origin.x = frame1.origin.x;
             }
             if (tempFrame.origin.y < frame1.origin.y) {
                 tempFrame.origin.y = frame1.origin.y;
             }
+
+            if (tempFrame.origin.x > frame4.origin.x ) {
+                tempFrame.origin.x = frame4.origin.x;
+            }
+            if (tempFrame.origin.y > frame4.origin.y) {
+                tempFrame.origin.y = frame4.origin.y;
+            }
+            
             
             if (isPageEnable) {
                 tempFrame = isDownPull ? frame1 : frame4;
